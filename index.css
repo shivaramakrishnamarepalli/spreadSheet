@@ -1,12 +1,8 @@
 .grid-container {
     display: grid;
-    width: 96vw;
-    height: 600px;
-    grid-template-columns: repeat(10,9.6vw);
+    grid-template-columns: repeat(20,auto);
     grid-template-rows: repeat(25px);
-    background-color: #2196F3;
     padding: 10px;
-    padding-right: 4px;
 }
 
 .grid-item {
