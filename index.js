@@ -1,7 +1,7 @@
 import { Cell } from "./Cell.js";
 let cells = [];
 
-function createGrid(n) {
+function createGrid(n, m) {
   let container = document.createElement("div");
   container.classList.add("grid-container");
   container.style.width = `${156 * m}px`;
@@ -21,10 +21,9 @@ function createGrid(n) {
       }`;
       grid.style.width = "150px";
     } else {
-      //creating a new cell object 
-      const cell = new Cell(Math.ceil(i / m) - 1, (i % m) - 1,"25px","150px", container);
-      cells.push(cell); //adding the cell object to 'cells' array
-      cell.getDomReference().style.width = "150px";
+      const cell = new Cell(Math.ceil(i / m) - 1, (i % m) - 1, container);
+      cells.push(cell);
+      cell.setWidth("150px");
     }
     if (i == 1) {
       grid.textContent = "";
@@ -41,47 +40,32 @@ function createGrid(n) {
   document.body.appendChild(container);
 }
 
-let m = 20; // number of columns declared in grid container of css
-let n=200;
-createGrid(200); //creating a grid with 200 rows
-
+createGrid(200, 20); //creating a grid with 200 rows
 let container = document.querySelector(".grid-container");
-container.addEventListener("click", handleClick);
-function handleClick(event) {
+container.addEventListener("mouseover", handleMouseover);
+//todo:
+//navigate entire sheet through keys
+//remove handleMouseover when another cell is focused using tab
+function handleMouseover(event) {
+  if (event.target.className !== "grid-item cell") return;
   const cellTarget = cells.find((a) => a.getId() == event.target.id);
-  console.log(cellTarget);
+  let cellClicked = false;
+  const handleClick = (e) => {
+    if (event.target.className !== "grid-item cell") return;
+    cellClicked = true;
+  };
+  const handleKeydown = (e) => {
+    if (event.target.className !== "grid-item cell") return;
+    if (cellClicked) {
+      if (e.code !== "Enter") return;
+      cellTarget.getDomReference().blur();
+      cellTarget.setValue(e.target.value);
+      cellClicked = false;
+    } else {
+      cellTarget.getDomReference().focus();
+      cellClicked = true;
+    }
+  };
+  document.addEventListener("click", handleClick);
+  document.addEventListener("keydown", handleKeydown);
 }
-                                // Read this.
-
-// fix this the get width and set width are not working i am not able to do it 
-// and also we should create a array for indexes also so when a row is resized the  index will also be resized 
-// and if we are not able to resolve this we can just move to the previous version of the code so lets just try this.
-
-
-container.addEventListener("mousedown", function(e) {
-  if (e.target.classList.contains("grid-item")) {
-    let initialWidth = e.target.getWidth();
-    let initialX = e.clientX;
-    let currentCol = e.target.column;
-
-    let mouseMoveHandler = function(e) {
-      let widthDiff = e.clientX - initialX;
-      for (let i = 0; i < cells.length; i++) {
-        if (cells[i].column == currentCol) {
-          cells[i].setWidth(initialWidth + widthDiff + "px");
-        }
-      }
-    };
-
-    let mouseUpHandler = function() {
-      document.removeEventListener("mousemove", mouseMoveHandler);
-      document.removeEventListener("mouseup", mouseUpHandler);
-    };
-
-    document.addEventListener("mousemove", mouseMoveHandler);
-    document.addEventListener("mouseup", mouseUpHandler);
-  }
-});
-
-
-
