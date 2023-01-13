@@ -1,6 +1,9 @@
 import { Cell } from "./Cell.js";
 let cells = [];
 
+import { compute } from "./Compute.js";
+compute("23+44-33*2+6/2")
+
 function createGrid(n) {
   let container = document.createElement("div");
   container.classList.add("grid-container");
