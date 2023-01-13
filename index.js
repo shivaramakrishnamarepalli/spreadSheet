@@ -1,19 +1,4 @@
-class Cell {
-  constructor(row, col, parentContainer) {
-    this.location = `${row}${col}`;
-    this.domReference = document.createElement("input");
-    this.domReference.setAttribute("id", this.location);
-    this.domReference.classList.add("grid-item");
-    parentContainer.appendChild(this.domReference);
-  }
-  setFormula(formula) {
-    //extract formula
-  }
-  computeValue() {
-    //compute value
-    this.domReference.setAttribute("value", value);
-  }
-}
+import {Cell} from './Cell.js'
 let cells = [];
 function createGrid(n) {
   let container = document.createElement("div");
@@ -24,3 +9,11 @@ function createGrid(n) {
   document.body.appendChild(container);
 }
 createGrid(20);
+let container = document.querySelector(".grid-container");
+container.addEventListener("click", handleClick);
+function handleClick(event) {
+  console.log(event.target)
+  console.log(event.target.id)
+  const cellTarget = cells.find((a) => a.getId()==event.target.id)
+  console.log(cellTarget)
+}
