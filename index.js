@@ -18,10 +18,15 @@ function createGrid(n) {
           grid.textContent=`${Math.ceil(i/m)-1}`
       }
       else {
-          if(i<=m)
+          if(i<m)
           {
               grid = document.createElement('div');
               grid.textContent=`${Math.ceil(i%m)-1}`
+          }
+          else if(i==m)
+          {
+            grid = document.createElement('div');
+            grid.textContent=`${i-1}`
           }
           else {
               grid = document.createElement('input');
