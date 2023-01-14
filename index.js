@@ -24,7 +24,11 @@ function createGrid(n, m) {
       }`;
       grid.style.width = "150px";
     } else {
-      const cell = new Cell(Math.ceil(i / m) - 1, (i % m) - 1, container);
+      let col =(i % m) - 1;
+      if(col==-1){
+        col=m-1
+      }
+      const cell = new Cell(Math.ceil(i / m) - 1,col , container);
       cells.push(cell);
       cell.setWidth("150px");
     }
@@ -48,8 +52,8 @@ createGrid(20, 20); //creating a grid with 20 rows
 
 let container = document.querySelector(".grid-container");
 //container.addEventListener("click", handleClick);
-let current = cells[0];
-
+let current = cells[18];
+console.log(current)
 
 function handleClick(event) {
   if (event.target.className !== "grid-item cell") return;
