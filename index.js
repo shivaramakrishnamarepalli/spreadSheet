@@ -42,33 +42,87 @@ function createGrid(n, m) {
 
   document.body.appendChild(container);
 }
+createGrid(20, 20); //creating a grid with 20 rows
 
-createGrid(200, 20); //creating a grid with 200 rows
+
+
 let container = document.querySelector(".grid-container");
-container.addEventListener("mouseover", handleMouseover);
-//todo:
-//navigate entire sheet through keys
-//remove handleMouseover when another cell is focused using tab
-function handleMouseover(event) {
+//container.addEventListener("click", handleClick);
+let current = cells[0];
+
+
+function handleClick(event) {
   if (event.target.className !== "grid-item cell") return;
-  const cellTarget = cells.find((a) => a.getId() == event.target.id);
-  let cellClicked = false;
-  const handleClick = (e) => {
-    if (event.target.className !== "grid-item cell") return;
-    cellClicked = true;
-  };
+  const cellTarget = cells.find((a) => a.id == event.target.id);
+  current = cellTarget
+  console.log(cellTarget)//printing undefined to console                --  main problem
   const handleKeydown = (e) => {
-    if (event.target.className !== "grid-item cell") return;
-    if (cellClicked) {
+      if (event.target.className !== "grid-item cell") return;
       if (e.code !== "Enter") return;
-      cellTarget.getDomReference().blur();
-      cellTarget.setValue(e.target.value);
-      cellClicked = false;
-    } else {
-      cellTarget.getDomReference().focus();
-      cellClicked = true;
-    }
+      cellTarget.setValue(e.target.innerText);
+      console.log(cellTarget.getValue())
   };
-  document.addEventListener("click", handleClick);
   document.addEventListener("keydown", handleKeydown);
+}
+
+
+//only the current is changing input is not being taken to new tab
+document.onkeydown = checkKey;
+function checkKey(e) {
+  const handleKeydown = (e) => {
+    if (e.target.className !== "grid-item cell") return;
+    if (e.code !== "Enter") return;
+    current.setValue(e.target.innerText);
+    console.log(current.getValue())
+  };
+  document.addEventListener("keydown", handleKeydown);
+
+    if (e.keyCode == '40') {
+      // down arrow
+      let currentRow = current.row;
+      let currentCol = current.column;
+      let nextRow = currentRow + 1;
+      let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
+      if(nextCell){
+        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        current = nextCell;
+        current.getDomReference().style.backgroundColor = "red";
+      }
+    }
+    else if (e.keyCode == '38') {
+      // up arrow
+      let currentRow = current.row;
+      let currentCol = current.column;
+      let nextRow = currentRow - 1;
+      let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
+      if(nextCell){
+        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        current = nextCell;
+        current.getDomReference().style.backgroundColor = "red";
+      }
+    }
+    else if (e.keyCode == '37') {
+      // left arrow
+      let currentRow = current.row;
+      let currentCol = current.column;
+      let nextCol = currentCol - 1;
+      let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
+      if(nextCell){
+        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        current = nextCell;
+        current.getDomReference().style.backgroundColor = "red";
+      }
+    }
+    else if (e.keyCode == '39') {
+      // right arrow
+      let currentRow = current.row;
+      let currentCol = current.column;
+      let nextCol = currentCol + 1;
+      let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
+      if(nextCell){
+        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        current = nextCell;
+        current.getDomReference().style.backgroundColor = "red";
+      }
+    }
 }
