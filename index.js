@@ -49,84 +49,74 @@ function createGrid(n, m) {
 createGrid(20, 20); //creating a grid with 20 rows
 
 
-
 let container = document.querySelector(".grid-container");
-//container.addEventListener("click", handleClick);
-let current = cells[18];
-console.log(current)
+container.addEventListener("click", handleClick);
+let current = cells[0];
+current.getDomReference().style.backgroundColor="red"
+current.getDomReference().focus()
 
 function handleClick(event) {
   if (event.target.className !== "grid-item cell") return;
-  const cellTarget = cells.find((a) => a.id == event.target.id);
-  current = cellTarget
-  console.log(cellTarget)//printing undefined to console                --  main problem
-  const handleKeydown = (e) => {
-      if (event.target.className !== "grid-item cell") return;
-      if (e.code !== "Enter") return;
-      cellTarget.setValue(e.target.innerText);
-      console.log(cellTarget.getValue())
-  };
+  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+  current = cells.find((a) => a.getId() == event.target.id);
+  current.getDomReference().style.backgroundColor = "red";
   document.addEventListener("keydown", handleKeydown);
 }
 
 
-//only the current is changing input is not being taken to new tab
 document.onkeydown = checkKey;
 function checkKey(e) {
-  const handleKeydown = (e) => {
-    if (e.target.className !== "grid-item cell") return;
-    if (e.code !== "Enter") return;
-    current.setValue(e.target.innerText);
-    console.log(current.getValue())
-  };
-  document.addEventListener("keydown", handleKeydown);
 
-    if (e.keyCode == '40') {
-      // down arrow
-      let currentRow = current.row;
-      let currentCol = current.column;
-      let nextRow = currentRow + 1;
-      let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
-      if(nextCell){
-        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        current = nextCell;
-        current.getDomReference().style.backgroundColor = "red";
-      }
+  if(current.value===undefined)
+  {
+    current.value=""
+  }
+  if(!isNaN(e.key))
+  {
+    current.setValue(current.value+e.key);
+  }
+  
+  let currentRow = current.row;
+  let currentCol = current.column;
+  if (e.keyCode == '40') {
+    // down arrow
+    let nextRow = currentRow + 1;
+    let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
+    if(nextCell){
+      setCurrent(nextCell)
     }
-    else if (e.keyCode == '38') {
-      // up arrow
-      let currentRow = current.row;
-      let currentCol = current.column;
-      let nextRow = currentRow - 1;
-      let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
-      if(nextCell){
-        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        current = nextCell;
-        current.getDomReference().style.backgroundColor = "red";
-      }
+  }
+  else if (e.keyCode == '38') {
+    // up arrow
+    let nextRow = currentRow - 1;
+    let nextCell = cells.find((a) => a.row == nextRow && a.column == currentCol);
+    if(nextCell){
+      setCurrent(nextCell)
     }
-    else if (e.keyCode == '37') {
-      // left arrow
-      let currentRow = current.row;
-      let currentCol = current.column;
-      let nextCol = currentCol - 1;
-      let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
-      if(nextCell){
-        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        current = nextCell;
-        current.getDomReference().style.backgroundColor = "red";
-      }
+  }
+  else if (e.keyCode == '37') {
+    // left arrow
+    let nextCol = currentCol - 1;
+    let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
+    if(nextCell){
+      setCurrent(nextCell)
     }
-    else if (e.keyCode == '39') {
-      // right arrow
-      let currentRow = current.row;
-      let currentCol = current.column;
-      let nextCol = currentCol + 1;
-      let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
-      if(nextCell){
-        current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        current = nextCell;
-        current.getDomReference().style.backgroundColor = "red";
-      }
+  }
+  else if (e.keyCode == '39') {
+    // right arrow
+    let nextCol = currentCol + 1;
+    let nextCell = cells.find((a) => a.row == currentRow && a.column == nextCol);
+    if(nextCell){
+      setCurrent(nextCell)
     }
+  }
+}
+
+function setCurrent(nextCell)
+{
+  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+  current.getDomReference().blur()
+  current = nextCell;
+  current.getDomReference().focus()
+  current.getDomReference().style.backgroundColor = "red";
 }
