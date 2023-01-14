@@ -2,7 +2,7 @@ import { Cell } from "./Cell.js";
 let cells = [];
 
 import { compute } from "./Compute.js";
-compute("23+44-33*2+6/2")
+console.log(compute("23+44-33*2+6/2"))
 
 function createGrid(n, m) {
   let container = document.createElement("div");
@@ -75,7 +75,7 @@ function checkKey(e) {
   {
     current.setValue(current.value+e.key);
   }
-  
+
   let currentRow = current.row;
   let currentCol = current.column;
   if (e.keyCode == '40') {
