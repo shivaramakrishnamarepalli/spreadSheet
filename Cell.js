@@ -1,9 +1,10 @@
 export class Cell {
-  constructor(row, column, parentContainer) {
+  constructor(row, column,i, parentContainer) {
     this.row = row;
     this.column = column;
+    this.i=i;
     this.domReference = document.createElement("input");
-    this.domReference.setAttribute("id", `${row}${column}`);
+    this.domReference.setAttribute("id", `${row}+${column}`);
     this.domReference.setAttribute("class", "grid-item cell");
     this.domReference.classList.add("grid-item");
     parentContainer.appendChild(this.domReference);

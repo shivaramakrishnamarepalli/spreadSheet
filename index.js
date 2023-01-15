@@ -13,29 +13,29 @@ function createGrid(n, m) {
 
   for (let i = 1; i <= m * n; i++) {
     let grid;
-    if (i % m == 1) {
+    if (i % m === 1) {
       grid = document.createElement("div");
       grid.style.width = "30px";
       grid.textContent = `${Math.ceil(i / m) - 1}`;
     } else if (i <= m) {
       grid = document.createElement("div");
       grid.textContent = `${
-        Math.ceil(i % m) - 1 == -1 ? m - 1 : Math.ceil(i % m) - 1
+        Math.ceil(i % m) - 1 === -1 ? m - 1 : Math.ceil(i % m) - 1
       }`;
       grid.style.width = "150px";
     } else {
       let col =(i % m) - 1;
-      if(col==-1){
+      if(col===-1){
         col=m-1
       }
-      const cell = new Cell(Math.ceil(i / m) - 1,col , container);
+      const cell = new Cell(Math.ceil(i / m) - 1,col ,i, container);
       cells.push(cell);
       cell.setWidth("150px");
     }
-    if (i == 1) {
+    if (i === 1) {
       grid.textContent = "";
     }
-    if (i % m == 1 || i <= m) {
+    if (i % m === 1 || i <= m) {
       grid.type = "text";
       grid.classList.add("grid-item");
       container.appendChild(grid);
@@ -46,21 +46,18 @@ function createGrid(n, m) {
 
   document.body.appendChild(container);
 }
-createGrid(20, 20); //creating a grid with 20 rows
+createGrid(200, 20); //creating a grid with 20 rows
 
 
 let container = document.querySelector(".grid-container");
 container.addEventListener("click", handleClick);
 let current = cells[0];
-current.getDomReference().style.backgroundColor="red"
+current.getDomReference().classList.add("current-cell");
 current.getDomReference().focus()
 
 function handleClick(event) {
   if (event.target.className !== "grid-item cell") return;
-  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-  current = cells.find((a) => a.getId() == event.target.id);
-  current.getDomReference().style.backgroundColor = "red";
-  document.addEventListener("keydown", handleKeydown);
+  setCurrent(cells.find((a) => a.getId() == event.target.id));
 }
 
 
@@ -114,9 +111,9 @@ function checkKey(e) {
 
 function setCurrent(nextCell)
 {
-  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+  current.getDomReference().classList.remove("current-cell");
   current.getDomReference().blur()
   current = nextCell;
   current.getDomReference().focus()
-  current.getDomReference().style.backgroundColor = "red";
+  current.getDomReference().classList.add("current-cell");
 }

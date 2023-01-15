@@ -13,3 +13,8 @@
   text-align: center;
   margin: 0 auto;
 }
+
+.current-cell{
+  border: 2px solid rgba(255, 0, 0, 0.87);
+  outline : rgba(255, 0, 0, 0.87) solid 2px;
+}
