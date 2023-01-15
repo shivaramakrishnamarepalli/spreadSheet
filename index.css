@@ -14,7 +14,12 @@
   margin: 0 auto;
 }
 
-.current-cell{
+.current-cell {
   border: 2px solid rgba(255, 0, 0, 0.87);
-  outline : rgba(255, 0, 0, 0.87) solid 2px;
+  outline: rgba(255, 0, 0, 0.87) solid 2px;
+}
+
+#formula-input {
+  font-size: 20px;
+  margin-bottom: 5px;
 }
