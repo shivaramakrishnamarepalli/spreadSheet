@@ -3,8 +3,11 @@ import { isArrowKey } from "./Navigate.js ";
 import { navigate } from "./Navigate.js";
 import { compute } from "./Compute.js";
 
+/* https://stackoverflow.com/a/10744577 */
+document.body.style.overflow = "hidden"; // hide browser scroll bar
+
 let container = document.createElement("div");
-let cells = createGrid(container, 200, 27);
+let cells = createGrid(container, 20, 27);
 let current = cells[0];
 current.getDomReference().style.backgroundColor = "red";
 const formulaBox = document.getElementById("formula-box");
@@ -65,8 +68,16 @@ function handleKeydown(e) {
 function setCurrent(nextCell) {
   current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
   current = nextCell;
-  current.getDomReference().scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
-  container.scrollTop = current.getDomReference().offsetTop - container.offsetTop - container.clientHeight/2;
-  container.scrollLeft = current.getDomReference().offsetLeft - container.offsetLeft - container.clientWidth/2;
+  current
+    .getDomReference()
+    .scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
+  container.scrollTop =
+    current.getDomReference().offsetTop -
+    container.offsetTop -
+    container.clientHeight / 2;
+  container.scrollLeft =
+    current.getDomReference().offsetLeft -
+    container.offsetLeft -
+    container.clientWidth / 2;
   current.getDomReference().style.backgroundColor = "red";
 }
