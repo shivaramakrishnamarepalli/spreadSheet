@@ -2,7 +2,7 @@ import { Cell } from "./Cell.js";
 export function createGrid(container, n, m) {
   let cells = [];
   container.classList.add("grid-container");
-  container.style.width = `${156 * m}px`;
+  container.style.width = `${157.5 * m}px`;
   container.style.height = `${n * 30}px`;
   container.style.backgroundColor = "rgb(135, 190, 237)";
 
