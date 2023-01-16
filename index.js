@@ -20,22 +20,28 @@ function handleClickOnFormulaBox(e) {
 }
 function handleClickOnContainer(event) {
   if (event.target.className !== "grid-item cell") return;
-  setCurrent(cells.find((a) => a.getId() == event.target.id))
+  setCurrent(cells.find((a) => a.getId() == event.target.id));
 }
 
 function handleKeydown(e) {
   if (document.activeElement === formulaInputBox) {
     if (e.keyCode == 13) {
+      //enter key
       current.setFormula(formulaInputBox.value);
       formulaInputBox.blur();
     }
     return;
   }
   if (isArrowKey(e.keyCode)) {
-    if (!current.isFocused()) {
+    if (!current.isEditingMode()) {
+      if (current.isFocused()) {
+        current.toggleFocus();
+      }
+      current.setValue();
       navigate(e, current, setCurrent, cells);
-      return;
+      formulaInputBox.value = current.getFormula() || "";
     }
+    return;
   }
   if (e.keyCode == 13) {
     //'Enter key'
@@ -43,6 +49,9 @@ function handleKeydown(e) {
     e.preventDefault();
     if (current.isFocused()) {
       current.setValue();
+      current.setEditingMode(false);
+    } else {
+      current.setEditingMode(true);
     }
     current.toggleFocus();
     return;
