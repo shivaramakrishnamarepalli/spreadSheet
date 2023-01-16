@@ -4,7 +4,7 @@ import { navigate } from "./Navigate.js";
 import { compute } from "./Compute.js";
 
 let container = document.createElement("div");
-let cells = createGrid(container, 20, 10);
+let cells = createGrid(container, 20, 27);
 let current = cells[0];
 current.getDomReference().style.backgroundColor = "red";
 const formulaBox = document.getElementById("formula-box");
@@ -20,10 +20,7 @@ function handleClickOnFormulaBox(e) {
 }
 function handleClickOnContainer(event) {
   if (event.target.className !== "grid-item cell") return;
-  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-  current = cells.find((a) => a.getId() == event.target.id);
-  current.getDomReference().style.backgroundColor = "red";
-  formulaInputBox.value = current.getFormula() || "";
+  setCurrent(cells.find((a) => a.getId() == event.target.id));
 }
 
 function handleKeydown(e) {
