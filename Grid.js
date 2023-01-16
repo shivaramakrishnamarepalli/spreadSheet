@@ -2,7 +2,7 @@ import { Cell } from "./Cell.js";
 export function createGrid(container, n, m) {
   let cells = [];
   container.classList.add("grid-container");
-  container.classList.add("grid-container-wrapper")
+  container.classList.add("grid-container-wrapper");
   container.style.backgroundColor = "rgb(135, 190, 237)";
 
   for (let i = 1; i <= m * n; i++) {
@@ -11,7 +11,7 @@ export function createGrid(container, n, m) {
       grid = document.createElement("div");
       grid.style.width = "30px";
       grid.textContent = `${Math.ceil(i / m) - 1}`;
-      grid.classList.add("vertical-align")
+      grid.classList.add("vertical-align");
     } else if (i <= m) {
       grid = document.createElement("div");
       const columnNumber =
@@ -44,11 +44,4 @@ export function createGrid(container, n, m) {
 
   document.body.appendChild(container);
   return cells;
-}
-/* https://stackoverflow.com/a/22021709 */
-function unicodeToChar(text) {
-  console.log(typeof text);
-  return text.replace(/\\u[\dA-F]{4}/gi, function (match) {
-    return String.fromCharCode(parseInt(match.replace(/\\u/g, ""), 16));
-  });
 }
