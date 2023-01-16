@@ -3,14 +3,24 @@ export class Cell {
     this.row = row;
     this.column = column;
     this.domReference = document.createElement("div");
-    this.domReference.setAttribute("id", `${row}${column}`);
+    this.domReference.setAttribute("id", `${column}${row}`);
     this.domReference.setAttribute("class", "grid-item cell");
     this.domReference.classList.add("grid-item");
     parentContainer.appendChild(this.domReference);
+    this.editingMode = false;
+  }
+  setEditingMode(value) {
+    this.editingMode = value;
+  }
+  isEditingMode() {
+    return this.editingMode;
   }
   setFormula(formula) {
     //extract formula
     this.formula = formula;
+  }
+  getFormula() {
+    return this.formula;
   }
   getDomReference() {
     return this.domReference;
