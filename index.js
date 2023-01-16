@@ -4,7 +4,7 @@ import { navigate } from "./Navigate.js";
 import { compute } from "./Compute.js";
 
 let container = document.createElement("div");
-let cells = createGrid(container, 20, 20);
+let cells = createGrid(container, 20, 10);
 let current = cells[0];
 current.getDomReference().style.backgroundColor = "red";
 const formulaBox = document.getElementById("formula-box");
@@ -23,21 +23,28 @@ function handleClickOnContainer(event) {
   current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
   current = cells.find((a) => a.getId() == event.target.id);
   current.getDomReference().style.backgroundColor = "red";
+  formulaInputBox.value = current.getFormula() || "";
 }
 
 function handleKeydown(e) {
   if (document.activeElement === formulaInputBox) {
     if (e.keyCode == 13) {
+      //enter key
       current.setFormula(formulaInputBox.value);
       formulaInputBox.blur();
     }
     return;
   }
   if (isArrowKey(e.keyCode)) {
-    if (!current.isFocused()) {
+    if (!current.isEditingMode()) {
+      if (current.isFocused()) {
+        current.toggleFocus();
+      }
+      current.setValue();
       navigate(e, current, setCurrent, cells);
-      return;
+      formulaInputBox.value = current.getFormula() || "";
     }
+    return;
   }
   if (e.keyCode == 13) {
     //'Enter key'
@@ -45,6 +52,9 @@ function handleKeydown(e) {
     e.preventDefault();
     if (current.isFocused()) {
       current.setValue();
+      current.setEditingMode(false);
+    } else {
+      current.setEditingMode(true);
     }
     current.toggleFocus();
     return;
