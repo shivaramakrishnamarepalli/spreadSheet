@@ -2,8 +2,7 @@ import { Cell } from "./Cell.js";
 export function createGrid(container, n, m) {
   let cells = [];
   container.classList.add("grid-container");
-  container.style.width = `${157.5 * m}px`;
-  container.style.height = `${n * 30}px`;
+  container.classList.add("grid-container-wrapper")
   container.style.backgroundColor = "rgb(135, 190, 237)";
 
   for (let i = 1; i <= m * n; i++) {
@@ -12,6 +11,7 @@ export function createGrid(container, n, m) {
       grid = document.createElement("div");
       grid.style.width = "30px";
       grid.textContent = `${Math.ceil(i / m) - 1}`;
+      grid.classList.add("vertical-align")
     } else if (i <= m) {
       grid = document.createElement("div");
       const columnNumber =

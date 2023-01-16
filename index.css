@@ -1,8 +1,11 @@
 .grid-container {
   display: grid;
+  height: 90vh;
+  width: 98vw;
   grid-template-columns: repeat(27, auto);
   grid-template-rows: repeat(25px);
   padding: 10px;
+  
 }
 
 .grid-item {
@@ -22,4 +25,13 @@
 #formula-input {
   font-size: 20px;
   margin-bottom: 5px;
+}
+
+.grid-container-wrapper {
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.vertical-align{
+  vertical-align: top;
 }
