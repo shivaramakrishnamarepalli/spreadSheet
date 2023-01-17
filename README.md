@@ -12,8 +12,8 @@ Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will 
 
 current works :   (shiva)
 
-fixing the first row and column to the grid-container
-
+fixed the first row and column to the grid-container
+    -neat finish(cover extra portion,rough scroll after click)
 
 
 mistakes to be rectified -
@@ -24,3 +24,4 @@ postponed works -
 
 Specialities -
 1)can navigate throughout the sheet with arrow keys
+2)current row and column gets highlighted
