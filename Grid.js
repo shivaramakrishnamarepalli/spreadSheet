@@ -1,6 +1,8 @@
 import { Cell } from "./Cell.js";
 export function createGrid(container, n, m) {
   let cells = [];
+  let fixedRow = [];
+  let fixedCol=[];
   container.classList.add("grid-container");
   container.classList.add("grid-container-wrapper");
   container.style.backgroundColor = "rgb(135, 190, 237)";
@@ -11,7 +13,8 @@ export function createGrid(container, n, m) {
       grid = document.createElement("div");
       grid.style.width = "30px";
       grid.textContent = `${Math.ceil(i / m) - 1}`;
-      grid.classList.add("vertical-align");
+      grid.classList.add("horizontal-index")
+      fixedRow[Math.ceil(i / m) - 1]=grid
     } else if (i <= m) {
       grid = document.createElement("div");
       const columnNumber =
@@ -20,6 +23,8 @@ export function createGrid(container, n, m) {
       const columnLetter = String.fromCharCode(charCodeOfA + columnNumber - 1);
       grid.textContent = columnLetter;
       grid.style.width = "150px";
+      grid.classList.add("vertical-index");
+      fixedCol[columnNumber]=grid
     } else {
       const columnNumber =
         Math.ceil(i % m) - 1 == -1 ? m - 1 : Math.ceil(i % m) - 1;
@@ -32,6 +37,7 @@ export function createGrid(container, n, m) {
     }
     if (i == 1) {
       grid.textContent = "";
+      grid.classList.remove("vertical-index")
     }
     if (i % m == 1 || i <= m) {
       grid.type = "text";
@@ -43,5 +49,5 @@ export function createGrid(container, n, m) {
   }
 
   document.body.appendChild(container);
-  return cells;
+  return [cells,fixedRow,fixedCol];
 }

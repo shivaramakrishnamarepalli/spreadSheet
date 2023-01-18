@@ -5,7 +5,6 @@
   grid-template-columns: repeat(27, auto);
   grid-template-rows: repeat(25px);
   padding: 10px;
-  
 }
 
 .grid-item {
@@ -32,6 +31,14 @@
   overflow-y: scroll;
 }
 
-.vertical-align{
-  vertical-align: top;
+.vertical-index{
+  background-color: #bef3a4;
+  position: sticky;
+  top: 0;
+}
+
+.horizontal-index{
+  background-color: #bef3a4;
+  position: sticky;
+  left: 0;
 }
