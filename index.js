@@ -16,72 +16,82 @@ let prev = null;
 let fixedRow = box[1];
 let fixedCol = box[2];
 let current = cells[1][1];
-highlight();
-current.getDomReference().style.backgroundColor = "red";
-const formulaBox = document.getElementById("formula-box");
-const formulaInputBox = document.getElementById("formula-input");
+highlightCoordinates();
+current.setBackgroundColor("red");
+const cellContentsDisplay = document.getElementById("cell-contents-display");
 
-formulaBox.addEventListener("click", handleClickOnFormulaBox);
 container.addEventListener("click", handleClickOnContainer);
-document.addEventListener("keydown", handleKeydown);
+document.addEventListener("keydown", handleKeydown); //only for navigation, as user may hold the arrow key for a while
+document.addEventListener("keyup", handleKeyUp); // for normal text or enter
 
-function handleClickOnFormulaBox(e) {
-  if (e.target.id !== "formula-enter") return;
-  current.setFormula(formulaInputBox.value);
-}
 function handleClickOnContainer(event) {
   if (event.target.className !== "grid-item cell") return;
-  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
   const id = event.target.id;
   const column = id.slice(0, id.search(/\d/));
   const row = +id.replace(column, "");
   current = cells[row][columnLetterToNumber(column)];
-  current.getDomReference().style.backgroundColor = "red";
-  highlight();
+  current.setBackgroundColor("red");
+  highlightCoordinates();
 }
-
 function handleKeydown(e) {
-  if (document.activeElement === formulaInputBox) {
-    if (e.keyCode == 13) {
-      //enter key
-      current.setFormula(formulaInputBox.value);
-      formulaInputBox.blur();
-    }
-    return;
-  }
-  if (isArrowKey(e.keyCode)) {
-    if (!current.isEditingMode()) {
-      if (current.isFocused()) {
-        current.toggleFocus();
-      }
-      current.setValue();
-      navigate(e, current, setCurrent, cells);
-      formulaInputBox.value = current.getFormula() || "";
-    }
-    return;
-  }
   if (e.keyCode == 13) {
-    //'Enter key'
     /* https://stackoverflow.com/a/61237402 */
     e.preventDefault();
-    if (current.isFocused()) {
-      current.setValue();
-      current.setEditingMode(false);
-    } else {
-      current.setEditingMode(true);
-    }
-    current.toggleFocus();
-    return;
+  }
+  if (!isArrowKey(e.keyCode)) return;
+  handleArrowKey(e);
+  updateCellContentDisplay();
+}
+function handleKeyUp(e) {
+  if (isArrowKey(e.keyCode)) return;
+  if (e.keyCode == 13) {
+    //'Enter key'
+    handleEnterKey(e);
   } else {
-    if (!current.isFocused()) {
+    handleCharacterKey(e);
+  }
+  updateCellContentDisplay();
+}
+const handleArrowKey = (e) => {
+  if (!current.isEditingMode()) {
+    if (current.isFocused()) {
       current.toggleFocus();
     }
+    current.updateCellContent();
+    navigate(e, current, setCurrent, cells);
   }
-}
+};
+const handleEnterKey = (e) => {
+  /* https://stackoverflow.com/a/61237402 */
+  e.preventDefault();
+  if (current.isFocused()) {
+    current.updateCellContent();
+    current.setEditingMode(false);
+  } else {
+    current.setEditingMode(true);
+  }
+  current.toggleFocus();
+};
+const handleCharacterKey = (e) => {
+  if (!current.isFocused()) {
+    current.toggleFocus();
+  }
+  current.updateCellContent();
+};
+const updateCellContentDisplay = () => {
+  if (current.getFormula()) {
+    cellContentsDisplay.innerText = `=${current.getFormula()}`;
+  } else if (current.getValue()) {
+    cellContentsDisplay.innerText = current.getValue();
+  } else {
+    cellContentsDisplay.innerText = "";
+  }
+};
 
 function setCurrent(e, nextCell) {
-  current.getDomReference().style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
   current = nextCell;
   current
@@ -99,11 +109,11 @@ function setCurrent(e, nextCell) {
       container.offsetLeft -
       container.clientWidth / 2;
   }
-  current.getDomReference().style.backgroundColor = "red";
-  highlight();
+  current.setBackgroundColor("red");
+  highlightCoordinates();
 }
 
-function highlight() {
+function highlightCoordinates() {
   if (prev) {
     fixedRow[prev.getRow()].style.backgroundColor = "#bef3a4";
     fixedCol[
