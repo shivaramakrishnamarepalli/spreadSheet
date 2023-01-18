@@ -4,7 +4,7 @@
   width: 98vw;
   grid-template-columns: repeat(27, auto);
   grid-template-rows: repeat(25px);
-  outline: rgb(135 190 237) solid 10px ;
+  outline: rgb(135 190 237) solid 10px;
 }
 
 .grid-item {
@@ -21,9 +21,13 @@
   outline: rgba(255, 0, 0, 0.87) solid 2px;
 }
 
-#formula-input {
+#cell-contents-display {
   font-size: 20px;
+  height: 25px;
+  width: 200px;
   margin-bottom: 5px;
+  margin-left: 10px;
+  border: 5px solid black;
 }
 
 .grid-container-wrapper {
@@ -31,13 +35,13 @@
   overflow-y: scroll;
 }
 
-.vertical-index{
+.vertical-index {
   background-color: #bef3a4;
   position: sticky;
   top: 0;
 }
 
-.horizontal-index{
+.horizontal-index {
   background-color: #bef3a4;
   position: sticky;
   left: 0;
