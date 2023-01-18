@@ -30,7 +30,6 @@ export function createGrid(container, n, m) {
         Math.ceil(i % m) - 1 == -1 ? m - 1 : Math.ceil(i % m) - 1;
       const charCodeOfA = "A".charCodeAt(0);
       const columnLetter = String.fromCharCode(charCodeOfA + columnNumber - 1);
-
       const cell = new Cell(Math.ceil(i / m) - 1, columnLetter, container);
       cells.push(cell);
       cell.setWidth("150px");
@@ -48,6 +47,10 @@ export function createGrid(container, n, m) {
     }
   }
 
-  document.body.appendChild(container);
+  let box = document.createElement("div")
+  box.append(container)
+  box.style.padding="10px";
+  document.body.appendChild(box);
+
   return [cells,fixedRow,fixedCol];
 }

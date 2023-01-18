@@ -13,7 +13,7 @@ Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will 
 current works :   (shiva)
 
 fixed the first row and column to the grid-container
-    -neat finish(cover extra portion,rough scroll after click)
+    -neat finish(rough scroll after click)
 
 
 mistakes to be rectified -

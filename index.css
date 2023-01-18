@@ -4,7 +4,7 @@
   width: 98vw;
   grid-template-columns: repeat(27, auto);
   grid-template-rows: repeat(25px);
-  padding: 10px;
+  outline: rgb(135 190 237) solid 10px ;
 }
 
 .grid-item {
