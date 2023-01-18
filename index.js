@@ -2,6 +2,8 @@ import { createGrid } from "./Grid.js";
 import { isArrowKey } from "./Navigate.js ";
 import { navigate } from "./Navigate.js";
 import { compute } from "./Compute.js";
+import { parseFormula } from "./Formula.js";
+console.log(parseFormula("E1+E2*A0+45/67-123*SUM(E1:E2)/AVG(E1,E2,E3)"));
 
 /* https://stackoverflow.com/a/10744577 */
 document.body.style.overflow = "hidden"; // hide browser scroll bar
