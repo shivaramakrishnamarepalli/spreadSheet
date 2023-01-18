@@ -2,38 +2,31 @@ export function navigate(e, current, setCurrent, cells) {
   if (current.value === undefined) {
     current.value = "";
   }
+  const totalRows = cells.length - 1;
+  const totalColumns = cells[0].length - 1;
   let currentRow = current.row;
-  let currentCol = current.column;
-  let nextCell
+  let currentCol = columnLetterToNumber(current.column);
+  let nextCell;
   if (e.keyCode === 40) {
     // down arrow
     let nextRow = currentRow + 1;
-    nextCell = cells.find(
-      (a) => a.row == nextRow && a.column == currentCol
-    );
+    nextCell = nextRow <= totalRows ? cells[nextRow][currentCol] : null;
   } else if (e.keyCode === 38) {
     // up arrow
     let nextRow = currentRow - 1;
-    nextCell = cells.find(
-      (a) => a.row == nextRow && a.column == currentCol
-    );
+    nextCell = nextRow >= 1 ? cells[nextRow][currentCol] : null;
   } else if (e.keyCode === 37) {
     // left arrow
-    let nextCol = String.fromCharCode(currentCol.charCodeAt(0) - 1);
-    nextCell = cells.find(
-      (a) => a.row == currentRow && a.column == nextCol
-    );
+    let nextCol = currentCol - 1;
+    nextCell = nextCol >= 1 ? cells[currentRow][nextCol] : null;
   } else if (e.keyCode === 39) {
     // right arrow
-    let nextCol = String.fromCharCode(currentCol.charCodeAt(0) + 1);
+    let nextCol = currentCol + 1;
 
-    nextCell = cells.find(
-      (a) => a.row == currentRow && a.column == nextCol
-    );
-
+    nextCell = nextCol <= totalColumns ? cells[currentRow][nextCol] : null;
   }
   if (nextCell) {
-    setCurrent(e,nextCell);
+    setCurrent(e, nextCell);
   }
 }
 export function isArrowKey(keyCode) {
@@ -41,4 +34,8 @@ export function isArrowKey(keyCode) {
     return true;
   }
   return false;
+}
+function columnLetterToNumber(columnLetter) {
+  const charCodeOfA = "A".charCodeAt(0);
+  return columnLetter.charCodeAt(0) - charCodeOfA + 1;
 }
