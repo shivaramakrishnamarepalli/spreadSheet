@@ -9,30 +9,8 @@ export class Cell {
     parentContainer.appendChild(this.domReference);
     this.editingMode = false;
   }
-  setEditingMode(value) {
-    this.editingMode = value;
-  }
-  isEditingMode() {
-    return this.editingMode;
-  }
-  setFormula(formula) {
-    //extract formula
-    this.formula = formula;
-  }
-  getFormula() {
-    return this.formula;
-  }
   getDomReference() {
     return this.domReference;
-  }
-  getId() {
-    return this.domReference.id;
-  }
-  getValue() {
-    return +this.domReference.textContent;
-  }
-  computeFormula() {
-    //compute value
   }
   setWidth(width) {
     this.domReference.style.width = width;
@@ -40,14 +18,51 @@ export class Cell {
   getWidth() {
     return this.domReference.style.width;
   }
+  setBackgroundColor(color) {
+    this.domReference.style.backgroundColor = color;
+  }
+  setEditingMode(value) {
+    this.editingMode = value;
+  }
+  isEditingMode() {
+    return this.editingMode;
+  }
+
+  updateCellContent() {
+    const text = this.domReference.textContent;
+    if (text[0] === "=") {
+      this.formula = text.slice(1);
+      this.value = null;
+    } else {
+      this.value = text;
+      this.formula = null;
+    }
+  }
+  // setValue(value) {
+  //   this.value = value;
+  // }
+  getValue() {
+    return this.value;
+  }
+  // setFormula(formula) {
+  //   //extract formula
+  //   this.formula = formula;
+  // }
+  getFormula() {
+    return this.formula;
+  }
+
+  getId() {
+    return this.domReference.id;
+  }
   getRow() {
     return this.row;
   }
   getColumn() {
     return this.column;
   }
-  setValue() {
-    this.value = this.domReference.textContent;
+  computeFormula() {
+    //compute value
   }
   toggleFocus() {
     if (this.isFocused()) {
