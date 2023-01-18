@@ -1,4 +1,4 @@
-export function parseFormula(formula) {
+export function parseFormula(formula, cells) {
   const regex = /([\/*+-])/g; //matches only operators paranthesis keep the delimiters in the array after split()
   const splittedArray = formula.split(regex);
   return splittedArray
