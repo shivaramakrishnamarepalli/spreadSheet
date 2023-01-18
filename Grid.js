@@ -51,6 +51,11 @@ export function createGrid(container, numberOfRows, numberOfColumns) {
       grid.setAttribute("colomn", (i % numberOfColumns) - 1);
     }
   }
-  document.body.appendChild(container);
+
+  let box = document.createElement("div");
+  box.append(container);
+  box.style.padding = "10px";
+  document.body.appendChild(box);
+
   return [cells, fixedRow, fixedCol];
 }
