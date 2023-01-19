@@ -1,22 +1,22 @@
-import { createGrid } from "./Grid.js";
+import { Grid } from "./Grid.js";
+import { Cell } from "./Cell.js";
 import { isArrowKey } from "./Navigate.js ";
 import { navigate } from "./Navigate.js";
-import { columnLetterToNumber } from "./unicodeConversions.js";
-import { compute } from "./Compute.js";
-import { parseFormula } from "./Formula.js";
-//console.log(parseFormula("E1+E2*A0+45/67-123*SUM(E1:E2)/AVG(E1,E2,E3)"));
+import { parseFormula, extractCells } from "./Formula.js";
+// console.log("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)");
+// console.log(parseFormula("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)"));
+// console.log(
+//   extractDependentCells("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)")
+// );
 
 /* https://stackoverflow.com/a/10744577 */
 document.body.style.overflow = "hidden"; // hide browser scroll bar
 
-const container = document.createElement("div");
-const box = createGrid(container, 20, 27);
-const cells = box[0];
 const cellContentsDisplay = document.getElementById("cell-contents-display");
-let current = cells[1][1];
+const container = document.createElement("div");
+Grid.createGrid(container, 20, 27);
+let current = Grid.cellsArray[1][1];
 let prev = null;
-let fixedRow = box[1];
-let fixedCol = box[2];
 highlightCoordinates();
 current.setBackgroundColor("red");
 
@@ -32,10 +32,15 @@ function handleClickOnContainer(event) {
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
   const id = event.target.id;
-  const column = id.slice(0, id.search(/\d/));
-  const row = +id.replace(column, "");
-  current = cells[row][columnLetterToNumber(column)];
+  let row, column;
+  [row, column] = Cell.extractRowAndColumn(id);
+  current = Grid.cellsArray[row][column];
   current.setBackgroundColor("red");
+  //TODO:
+  // fix : on clicking cursor should be in the end
+  if (current.getFormula()) {
+    current.getDomReference().innerText = `=${current.getFormula()}`;
+  }
   highlightCoordinates();
   updateCellContentDisplay();
 }
@@ -48,6 +53,7 @@ function handleKeydown(e) {
   } else {
     handleCharacterKey(e);
   }
+
   updateCellContentDisplay();
 }
 function handleKeyUp(e) {
@@ -58,7 +64,6 @@ function handleKeyUp(e) {
   } else {
     handleCharacterKey(e);
   }
-  current.updateCellContent();
   updateCellContentDisplay();
 }
 const handleArrowKey = (e) => {
@@ -66,13 +71,15 @@ const handleArrowKey = (e) => {
     if (current.isFocused()) {
       current.toggleFocus();
     }
-    navigate(e, current, setCurrent, cells);
+    current.updateCellContent();
+    navigate(e, current, setCurrent, Grid.cellsArray);
   }
 };
 const handleEnterKey = (e) => {
   /* https://stackoverflow.com/a/61237402 */
   e.preventDefault();
   if (current.isFocused()) {
+    current.updateCellContent();
     current.setEditingMode(false);
   } else {
     current.setEditingMode(true);
@@ -87,17 +94,32 @@ const handleCharacterKey = (e) => {
 const updateCellContentDisplay = () => {
   if (current.getFormula()) {
     cellContentsDisplay.innerText = `=${current.getFormula()}`;
-  } else if (current.getValue()) {
-    cellContentsDisplay.innerText = current.getValue();
+  } else if (!current.getFormula()) {
+    cellContentsDisplay.innerText = current.getDomReference().innerText;
   } else {
     cellContentsDisplay.innerText = "";
   }
 };
-
+// following function is incomplete
+// function updateDependentCells() {
+//   if (current.getFormula()) {
+//     const cells = extractCells(current.getFormula());
+//     cells.forEach((cell) => {
+//       const [row, col] = Cell.extractRowAndColumn(cell);
+//       Grid.cellsArray[row][col].addDependentCell(current.getLocation());
+//     });
+//   }
+// }
 function setCurrent(e, nextCell) {
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
+  if (prev.getFormula()) {
+    prev.getDomReference().innerText = current.getValue();
+  }
   current = nextCell;
+  if (current.getFormula()) {
+    current.getDomReference().innerText = `=${current.getFormula()}`;
+  }
   current
     .getDomReference()
     .scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
@@ -119,13 +141,13 @@ function setCurrent(e, nextCell) {
 
 function highlightCoordinates() {
   if (prev) {
-    fixedRow[prev.getRow()].style.backgroundColor = "#bef3a4";
-    fixedCol[
+    Grid.fixedRow[prev.getRow()].style.backgroundColor = "#bef3a4";
+    Grid.fixedCol[
       prev.getColumn().charCodeAt(0) - "A".charCodeAt(0) + 1
     ].style.backgroundColor = "#bef3a4";
   }
-  fixedRow[current.getRow()].style.backgroundColor = "#48de37";
-  fixedCol[
+  Grid.fixedRow[current.getRow()].style.backgroundColor = "#48de37";
+  Grid.fixedCol[
     current.getColumn().charCodeAt(0) - "A".charCodeAt(0) + 1
   ].style.backgroundColor = "#48de37";
 }
