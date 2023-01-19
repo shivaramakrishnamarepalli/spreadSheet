@@ -1,16 +1,24 @@
+import { columnLetterToNumber } from "./unicodeConversions.js";
+
 export class Cell {
   constructor(row, column, parentContainer) {
     this.row = row;
     this.column = column;
+    this.location = `${row}${column}`;
     this.domReference = document.createElement("div");
     this.domReference.setAttribute("id", `${column}${row}`);
     this.domReference.setAttribute("class", "grid-item cell");
     this.domReference.classList.add("grid-item");
     parentContainer.appendChild(this.domReference);
     this.editingMode = false;
+    /* ..................Dependent Cells functionality is still work in progress ................*/
+    this.dependentCells = new Set();
   }
   getDomReference() {
     return this.domReference;
+  }
+  getLocation() {
+    return this.location;
   }
   setWidth(width) {
     this.domReference.style.width = width;
@@ -29,13 +37,14 @@ export class Cell {
   }
 
   updateCellContent() {
+    // each cell has a value, it is either the text Content entered by user or value computed from formula
     const text = this.domReference.textContent;
     if (text[0] === "=") {
       this.formula = text.slice(1);
-      this.value = null;
+      this.value = null; //parse
     } else {
-      this.value = text;
       this.formula = null;
+      this.value = text;
     }
   }
   // setValue(value) {
@@ -78,5 +87,18 @@ export class Cell {
   }
   isFocused() {
     return this.domReference === document.activeElement;
+  }
+  /* ..................Dependent Cells functionality is still work in progress ................*/
+  // addDependentCell(cell) {
+  //   this.dependentCells.add(cell);
+  // }
+  // removeDependentCell(cell) {
+  //   this.dependentCells.delete(cell);
+  // }
+  static extractRowAndColumn(text) {
+    let column = text.slice(0, text.search(/\d/));
+    const row = +text.replace(column, "");
+    column = columnLetterToNumber(column);
+    return [row, column];
   }
 }
