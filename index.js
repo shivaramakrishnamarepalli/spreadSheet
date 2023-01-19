@@ -9,20 +9,23 @@ import { parseFormula } from "./Formula.js";
 /* https://stackoverflow.com/a/10744577 */
 document.body.style.overflow = "hidden"; // hide browser scroll bar
 
-let container = document.createElement("div");
-let box = createGrid(container, 20, 27);
-let cells = box[0];
+const container = document.createElement("div");
+const box = createGrid(container, 20, 27);
+const cells = box[0];
+const cellContentsDisplay = document.getElementById("cell-contents-display");
+let current = cells[1][1];
 let prev = null;
 let fixedRow = box[1];
 let fixedCol = box[2];
-let current = cells[1][1];
 highlightCoordinates();
 current.setBackgroundColor("red");
-const cellContentsDisplay = document.getElementById("cell-contents-display");
 
 container.addEventListener("click", handleClickOnContainer);
-document.addEventListener("keydown", handleKeydown); //only for navigation, as user may hold the arrow key for a while
-document.addEventListener("keyup", handleKeyUp); // for normal text or enter
+/*  keydown is  for navigation, as user may hold the arrow key continously  amd also for registering first character pressed in a cell */
+document.addEventListener("keydown", handleKeydown);
+/* keyup is for normal text and 'enter' key, the cell TextContent will always be updated with the last character pressed 
+ https://stackoverflow.com/a/3502777/19767708 */
+document.addEventListener("keyup", handleKeyUp); // for normal text or 'enter' key
 
 function handleClickOnContainer(event) {
   if (event.target.className !== "grid-item cell") return;
@@ -34,14 +37,17 @@ function handleClickOnContainer(event) {
   current = cells[row][columnLetterToNumber(column)];
   current.setBackgroundColor("red");
   highlightCoordinates();
+  updateCellContentDisplay();
 }
 function handleKeydown(e) {
   if (e.keyCode == 13) {
     /* https://stackoverflow.com/a/61237402 */
     e.preventDefault();
+  } else if (isArrowKey(e.keyCode)) {
+    handleArrowKey(e);
+  } else {
+    handleCharacterKey(e);
   }
-  if (!isArrowKey(e.keyCode)) return;
-  handleArrowKey(e);
   updateCellContentDisplay();
 }
 function handleKeyUp(e) {
@@ -52,6 +58,7 @@ function handleKeyUp(e) {
   } else {
     handleCharacterKey(e);
   }
+  current.updateCellContent();
   updateCellContentDisplay();
 }
 const handleArrowKey = (e) => {
@@ -59,7 +66,6 @@ const handleArrowKey = (e) => {
     if (current.isFocused()) {
       current.toggleFocus();
     }
-    current.updateCellContent();
     navigate(e, current, setCurrent, cells);
   }
 };
@@ -67,7 +73,6 @@ const handleEnterKey = (e) => {
   /* https://stackoverflow.com/a/61237402 */
   e.preventDefault();
   if (current.isFocused()) {
-    current.updateCellContent();
     current.setEditingMode(false);
   } else {
     current.setEditingMode(true);
@@ -78,7 +83,6 @@ const handleCharacterKey = (e) => {
   if (!current.isFocused()) {
     current.toggleFocus();
   }
-  current.updateCellContent();
 };
 const updateCellContentDisplay = () => {
   if (current.getFormula()) {
