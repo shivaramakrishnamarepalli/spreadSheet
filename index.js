@@ -14,7 +14,7 @@ document.body.style.overflow = "hidden"; // hide browser scroll bar
 
 const cellContentsDisplay = document.getElementById("cell-contents-display");
 const container = document.createElement("div");
-Grid.createGrid(container, 20, 27);
+Grid.createGrid(container, 200, 27);
 let current = Grid.cellsArray[1][1];
 let prev = null;
 highlightCoordinates();
