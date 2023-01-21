@@ -1,43 +1,65 @@
-export function compute(expression){
+function compute(expression) {
+
     let operators = {
-        "/": { precedence: 3 },
+        "/": { precedence: 4 },
         "*": { precedence: 3 },
         "+": { precedence: 2 },
-        "-": { precedence: 2 }
+        "-": { precedence: 2 },
+        "^": { precedence: 5 },
     }
-    let outputQueue = "";       //for getting postfix
-    let Stack = [];
-    let number = "";
-    for (let i = 0; i < expression.length; i++) {
+
+    let num = ""
+    let postfix=[]
+    let stack = []
+    for(let i=0;i<expression.length;i++)
+    {
         let char = expression[i];
-        if (!isNaN(char) || char === ".") {
-            number += char;
-        } else {
-            if (number !== "") {
-                outputQueue += number + " ";
-                number = "";
+        if(!isNaN(char)||char === '.')
+        {
+            num += char ;
+        }
+        else 
+        {
+            if(num !== "")
+            {
+                postfix[postfix.length] = num ;
+                num = "" ;
             }
-            if (operators[char]) {
-                let o1 = char;
-                let o2 = Stack[Stack.length - 1];
-                while (operators[o2] && (operators[o1].precedence <= operators[o2].precedence)) {
-                    outputQueue += Stack.pop() + " ";
-                    o2 = Stack[Stack.length - 1];
+            if(char === "(")
+            {
+                stack.push(char);
+            }
+            else if(char === ")")
+            {
+                let ele;
+                while((ele = stack.pop()) !== "(")
+                {
+                    postfix[postfix.length] = ele;
                 }
-                Stack.push(o1);
             }
+            else if(operators[char])
+            {
+                let o1 = char;
+                let o2 = stack[stack.length-1];
+                while(operators[o2] && operators[o1].precedence <= operators[o2].precedence)
+                {
+                    postfix[postfix.length] = stack.pop() ;
+                    o2 = stack[stack.length-1];
+                }
+                stack.push(o1);
+            }    
         }
     }
-    if (number !== "") {
-        outputQueue += number + " ";
+    if(num !== "")
+    {
+        postfix[postfix.length] = num;
     }
-    while (Stack.length > 0) {
-        outputQueue += Stack.pop() + " ";
+    while(stack.length>0)
+    {
+        postfix[postfix.length] = stack.pop() ;
     }
-    let postfix = outputQueue.split(" ");// infix to postfix done
-  
-    //postfix evaluation
-    let stack = [];
+
+    stack = [];
     for (let i = 0; i < postfix.length; i++) {
         let val = postfix[i];
         if (!isNaN(val)) {
@@ -58,9 +80,11 @@ export function compute(expression){
                 case '/':
                     stack.push(b/a);
                     break;
+                case '^':
+                    stack.push(Math.pow(b, a));
+                    break;
             }
         }
     }
-    stack.pop()
     return stack.pop();
 }
