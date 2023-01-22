@@ -9,9 +9,6 @@ import { parseFormula, extractCells } from "./Formula.js";
 //   extractDependentCells("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)")
 // );
 
-/* https://stackoverflow.com/a/10744577 */
-document.body.style.overflow = "hidden"; // hide browser scroll bar
-
 const cellContentsDisplay = document.getElementById("cell-contents-display");
 const container = document.createElement("div");
 Grid.createGrid(container, 200, 27);
@@ -29,18 +26,18 @@ document.addEventListener("keyup", handleKeyUp); // for normal text or 'enter' k
 
 function handleClickOnContainer(event) {
   if (event.target.className !== "grid-item cell") return;
+  if (event.target.id === current.getId()) return;
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
+  if (current.getDomReference().innerText.startsWith("=")) {
+    current.setFormula();
+  }
+  updateCurrentCell();
+  current.setEditingMode(false);
   prev = current;
   const id = event.target.id;
-  let row, column;
-  [row, column] = Cell.extractRowAndColumn(id);
+  let [row, column] = Cell.extractRowAndColumn(id);
   current = Grid.cellsArray[row][column];
   current.setBackgroundColor("red");
-  //TODO:
-  // fix : on clicking cursor should be in the end
-  if (current.getFormula()) {
-    current.getDomReference().innerText = `=${current.getFormula()}`;
-  }
   highlightCoordinates();
   updateCellContentDisplay();
 }
@@ -71,7 +68,7 @@ const handleArrowKey = (e) => {
     if (current.isFocused()) {
       current.toggleFocus();
     }
-    current.updateCellContent();
+    updateCurrentCell();
     navigate(e, current, setCurrent, Grid.cellsArray);
   }
 };
@@ -79,15 +76,29 @@ const handleEnterKey = (e) => {
   /* https://stackoverflow.com/a/61237402 */
   e.preventDefault();
   if (current.isFocused()) {
-    current.updateCellContent();
+    if (current.getDomReference().innerText.startsWith("=")) {
+      current.setFormula(current.getDomReference().innerText.startsWith("="));
+    } else {
+      current.setFormula(null);
+    }
+    updateCurrentCell();
     current.setEditingMode(false);
   } else {
+    if (current.getFormula()) {
+      current.getDomReference().innerText = `=${current.getFormula()}`;
+    }
     current.setEditingMode(true);
   }
   current.toggleFocus();
 };
 const handleCharacterKey = (e) => {
+  if (current.isFocused()) {
+    if (current.getDomReference().innerText.startsWith("=")) {
+      current.setEditingMode(true);
+    }
+  }
   if (!current.isFocused()) {
+    current.getDomReference().innerText = "";
     current.toggleFocus();
   }
 };
@@ -110,16 +121,17 @@ const updateCellContentDisplay = () => {
 //     });
 //   }
 // }
+function updateCurrentCell() {
+  current.updateValue();
+
+  if (current.getFormula()) {
+    current.getDomReference().innerText = current.getValue();
+  }
+}
 function setCurrent(e, nextCell) {
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
-  if (prev.getFormula()) {
-    prev.getDomReference().innerText = current.getValue();
-  }
   current = nextCell;
-  if (current.getFormula()) {
-    current.getDomReference().innerText = `=${current.getFormula()}`;
-  }
   current
     .getDomReference()
     .scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });

@@ -36,15 +36,13 @@ export class Cell {
     return this.editingMode;
   }
 
-  updateCellContent() {
+  updateValue() {
     // each cell has a value, it is either the text Content entered by user or value computed from formula
-    const text = this.domReference.textContent;
-    if (text[0] === "=") {
-      this.formula = text.slice(1);
-      this.value = null; //parse
+    if (this.formula) {
+      this.value = "yet to compute"; //parse
     } else {
       this.formula = null;
-      this.value = text;
+      this.value = this.domReference.innerText;
     }
   }
   // setValue(value) {
@@ -53,10 +51,14 @@ export class Cell {
   getValue() {
     return this.value;
   }
-  // setFormula(formula) {
-  //   //extract formula
-  //   this.formula = formula;
-  // }
+  setFormula(value = null) {
+    if (value === null) {
+      this.formula = null;
+    } else {
+      const text = this.domReference.textContent;
+      this.formula = text.slice(1);
+    }
+  }
   getFormula() {
     return this.formula;
   }
