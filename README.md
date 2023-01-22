@@ -5,19 +5,38 @@ User must press Enter key to enter some value in a cell (switch into editing mod
 User can't navigate using keys unless they leave editing mode by pressing enter again
 the arrow keys will only work for the text inside the cell while it is in editing mode
 
--Currently working on:  (sameer)
+- latest improved input functionality :-
+
+  when a cell is highlited :-
+
+        if it is focused:
+
+            if user types formula it will automatically switch to "editing" mode and when user leaves the cell, the formula  will disappear and value will appear
+
+            if user types normal text, normal text will be saved as value
+
+        if it is not focused:
+
+            user press enter to switch into editing mode and modify the existing formula or value
+
+            user will type normal text and it will overwrite the previous value or formula
+
+-Todo: (sameer)
+
+- refactor and organise code that deals with input
+
+- add dependent cells code
+
+-Currently working on: (sameer)
 
 Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will look something like '23+56*9'
 
-
-current works :   (shiva)
+current works : (shiva)
 
 fixed the first row and column to the grid-container
-    -neat finish(rough scroll after click)
-
+-neat finish(rough scroll after click)
 
 mistakes to be rectified -
-
 
 postponed works -
 1)resizing the cell sizes with double click or like so
