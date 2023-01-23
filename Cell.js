@@ -35,19 +35,22 @@ export class Cell {
   isEditingMode() {
     return this.editingMode;
   }
+  setContentEditable(value) {
+    this.domReference.contentEditable = value;
+  }
 
   updateValue() {
     // each cell has a value, it is either the text Content entered by user or value computed from formula
-    if (this.formula) {
+    if (this.domReference.innerText.startsWith("=")) {
       this.value = "yet to compute"; //parse
     } else {
       this.formula = null;
       this.value = this.domReference.innerText;
     }
   }
-  // setValue(value) {
-  //   this.value = value;
-  // }
+  setValue(value) {
+    this.value = value;
+  }
   getValue() {
     return this.value;
   }
@@ -75,17 +78,14 @@ export class Cell {
   computeFormula() {
     //compute value
   }
-  toggleFocus() {
-    if (this.isFocused()) {
-      this.domReference.contenteditable = "false";
-      this.domReference.blur();
-    } else {
-      this.domReference.contentEditable = "true";
+  setFocus(value) {
+    if (value) {
+      this.domReference.focus();
       this.domReference.focus();
       /* https://stackoverflow.com/a/55811159/19767708 */
       document.execCommand("selectAll", false, null); //execCommand is deprecated but still supported
       document.getSelection().collapseToEnd();
-    }
+    } else this.domReference.blur();
   }
   isFocused() {
     return this.domReference === document.activeElement;
