@@ -17,30 +17,69 @@ let prev = null;
 highlightCoordinates();
 current.setBackgroundColor("red");
 
-container.addEventListener("click", handleClickOnContainer);
+const modifyExistingText = () => {
+  //set the inner text (either formula or value of the current text)
+  if (current.getFormula()) {
+    current.getDomReference().innerText = `=${current.getFormula()}`;
+  } else if (current.getValue()) {
+    current.getDomReference().innerText = current.getValue();
+  } else {
+    current.getDomReference().innerText = "";
+  }
+  current.setEditingMode(true);
+  current.setContentEditable(true);
+  current.setFocus(true);
+};
+const overwriteExistingText = () => {
+  if (current.isFocused()) {
+    if (current.getDomReference().innerText.startsWith("=")) {
+      current.setEditingMode(true);
+    }
+  } else {
+    current.getDomReference().innerText = "";
+  }
+  current.setContentEditable(true);
+  current.setFocus(true);
+};
+const saveCurrentText = () => {
+  const text = current.getDomReference().innerText;
+  if (text.startsWith("=")) {
+    current.setFormula(text.slice(1));
+    current.setValue("yet to compute"); // parse formula and set value
+  } else {
+    current.setFormula(null);
+    current.setValue(text);
+  }
+  current.getDomReference().innerText = current.getValue();
+  current.setEditingMode(false);
+  current.setContentEditable(false);
+  current.setFocus(false);
+};
+
+/* since e.preventdefault() doesn't work with click , https://stackoverflow.com/a/16045050 */
+container.addEventListener("mousedown", handleMouseDownOnContainer);
 /*  keydown is  for navigation, as user may hold the arrow key continously  amd also for registering first character pressed in a cell */
 document.addEventListener("keydown", handleKeydown);
 /* keyup is for normal text and 'enter' key, the cell TextContent will always be updated with the last character pressed 
  https://stackoverflow.com/a/3502777/19767708 */
 document.addEventListener("keyup", handleKeyUp); // for normal text or 'enter' key
 
-function handleClickOnContainer(event) {
-  if (event.target.className !== "grid-item cell") return;
-  if (event.target.id === current.getId()) return;
-  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
-  if (current.getDomReference().innerText.startsWith("=")) {
-    current.setFormula();
+/*............................ mouse events ..............................*/
+
+function handleMouseDownOnContainer(e) {
+  e.preventDefault();
+  if (e.target.className !== "grid-item cell") return;
+  if (e.target.id === current.getId()) return;
+  if (current.isFocused()) {
+    console.log("save current is called!! for ", current.getId());
+    saveCurrentText();
   }
-  updateCurrentCell();
-  current.setEditingMode(false);
-  prev = current;
-  const id = event.target.id;
-  let [row, column] = Cell.extractRowAndColumn(id);
-  current = Grid.cellsArray[row][column];
-  current.setBackgroundColor("red");
-  highlightCoordinates();
+  setCurrentByClick(e);
   updateCellContentDisplay();
 }
+
+/*............................. Keyboard events ....................................*/
+
 function handleKeydown(e) {
   if (e.keyCode == 13) {
     /* https://stackoverflow.com/a/61237402 */
@@ -63,45 +102,27 @@ function handleKeyUp(e) {
   }
   updateCellContentDisplay();
 }
-const handleArrowKey = (e) => {
-  if (!current.isEditingMode()) {
-    if (current.isFocused()) {
-      current.toggleFocus();
-    }
-    updateCurrentCell();
-    navigate(e, current, setCurrent, Grid.cellsArray);
-  }
-};
+
 const handleEnterKey = (e) => {
   /* https://stackoverflow.com/a/61237402 */
   e.preventDefault();
   if (current.isFocused()) {
-    if (current.getDomReference().innerText.startsWith("=")) {
-      current.setFormula(current.getDomReference().innerText.startsWith("="));
-    } else {
-      current.setFormula(null);
-    }
-    updateCurrentCell();
-    current.setEditingMode(false);
+    saveCurrentText();
   } else {
-    if (current.getFormula()) {
-      current.getDomReference().innerText = `=${current.getFormula()}`;
-    }
-    current.setEditingMode(true);
+    modifyExistingText();
   }
-  current.toggleFocus();
+};
+const handleArrowKey = (e) => {
+  if (current.isEditingMode()) return;
+  if (current.isFocused()) {
+    saveCurrentText();
+  }
+  navigate(e, current, setCurrentByKeys, Grid.cellsArray);
 };
 const handleCharacterKey = (e) => {
-  if (current.isFocused()) {
-    if (current.getDomReference().innerText.startsWith("=")) {
-      current.setEditingMode(true);
-    }
-  }
-  if (!current.isFocused()) {
-    current.getDomReference().innerText = "";
-    current.toggleFocus();
-  }
+  overwriteExistingText();
 };
+
 const updateCellContentDisplay = () => {
   if (current.getFormula()) {
     cellContentsDisplay.innerText = `=${current.getFormula()}`;
@@ -121,14 +142,17 @@ const updateCellContentDisplay = () => {
 //     });
 //   }
 // }
-function updateCurrentCell() {
-  current.updateValue();
 
-  if (current.getFormula()) {
-    current.getDomReference().innerText = current.getValue();
-  }
+function setCurrentByClick(e) {
+  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
+  prev = current;
+  const id = e.target.id;
+  let [row, column] = Cell.extractRowAndColumn(id);
+  current = Grid.cellsArray[row][column];
+  current.setBackgroundColor("red");
+  highlightCoordinates();
 }
-function setCurrent(e, nextCell) {
+function setCurrentByKeys(e, nextCell) {
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
   prev = current;
   current = nextCell;
