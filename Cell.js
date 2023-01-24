@@ -4,7 +4,7 @@ export class Cell {
   constructor(row, column, parentContainer) {
     this.row = row;
     this.column = column;
-    this.location = `${row}${column}`;
+    this.location = `${column}${row}`;
     this.domReference = document.createElement("div");
     this.domReference.setAttribute("id", `${column}${row}`);
     this.domReference.setAttribute("class", "grid-item cell");
@@ -38,19 +38,10 @@ export class Cell {
   setContentEditable(value) {
     this.domReference.contentEditable = value;
   }
-
-  updateValue() {
-    // each cell has a value, it is either the text Content entered by user or value computed from formula
-    if (this.domReference.innerText.startsWith("=")) {
-      this.value = "yet to compute"; //parse
-    } else {
-      this.formula = null;
-      this.value = this.domReference.innerText;
-    }
-  }
   setValue(value) {
     this.value = value;
   }
+
   getValue() {
     return this.value;
   }
@@ -81,7 +72,6 @@ export class Cell {
   setFocus(value) {
     if (value) {
       this.domReference.focus();
-      this.domReference.focus();
       /* https://stackoverflow.com/a/55811159/19767708 */
       document.execCommand("selectAll", false, null); //execCommand is deprecated but still supported
       document.getSelection().collapseToEnd();
@@ -90,13 +80,20 @@ export class Cell {
   isFocused() {
     return this.domReference === document.activeElement;
   }
-  /* ..................Dependent Cells functionality is still work in progress ................*/
-  // addDependentCell(cell) {
-  //   this.dependentCells.add(cell);
-  // }
-  // removeDependentCell(cell) {
-  //   this.dependentCells.delete(cell);
-  // }
+  addDependentCell(cell) {
+    this.dependentCells.add(cell);
+  }
+
+  removeDependentCell(cell) {
+    this.dependentCells.delete(cell);
+  }
+  removeAllDependentCells() {
+    this.dependentCells.clear();
+  }
+  getDependentCells() {
+    return this.dependentCells;
+  }
+
   static extractRowAndColumn(text) {
     let column = text.slice(0, text.search(/\d/));
     const row = +text.replace(column, "");

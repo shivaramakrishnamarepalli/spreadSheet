@@ -2,6 +2,11 @@ import { Grid } from "./Grid.js";
 import { Cell } from "./Cell.js";
 import { isArrowKey } from "./Navigate.js ";
 import { navigate } from "./Navigate.js";
+import {
+  modifyExistingInput,
+  overwriteExistingInput,
+  saveCurrentInput,
+} from "./input.js";
 import { parseFormula, extractCells } from "./Formula.js";
 // console.log("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)");
 // console.log(parseFormula("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)"));
@@ -16,45 +21,6 @@ let current = Grid.cellsArray[1][1];
 let prev = null;
 highlightCoordinates();
 current.setBackgroundColor("red");
-
-const modifyExistingText = () => {
-  //set the inner text (either formula or value of the current text)
-  if (current.getFormula()) {
-    current.getDomReference().innerText = `=${current.getFormula()}`;
-  } else if (current.getValue()) {
-    current.getDomReference().innerText = current.getValue();
-  } else {
-    current.getDomReference().innerText = "";
-  }
-  current.setEditingMode(true);
-  current.setContentEditable(true);
-  current.setFocus(true);
-};
-const overwriteExistingText = () => {
-  if (current.isFocused()) {
-    if (current.getDomReference().innerText.startsWith("=")) {
-      current.setEditingMode(true);
-    }
-  } else {
-    current.getDomReference().innerText = "";
-  }
-  current.setContentEditable(true);
-  current.setFocus(true);
-};
-const saveCurrentText = () => {
-  const text = current.getDomReference().innerText;
-  if (text.startsWith("=")) {
-    current.setFormula(text.slice(1));
-    current.setValue("yet to compute"); // parse formula and set value
-  } else {
-    current.setFormula(null);
-    current.setValue(text);
-  }
-  current.getDomReference().innerText = current.getValue();
-  current.setEditingMode(false);
-  current.setContentEditable(false);
-  current.setFocus(false);
-};
 
 /* since e.preventdefault() doesn't work with click , https://stackoverflow.com/a/16045050 */
 container.addEventListener("mousedown", handleMouseDownOnContainer);
@@ -71,8 +37,7 @@ function handleMouseDownOnContainer(e) {
   if (e.target.className !== "grid-item cell") return;
   if (e.target.id === current.getId()) return;
   if (current.isFocused()) {
-    console.log("save current is called!! for ", current.getId());
-    saveCurrentText();
+    saveCurrentInput(current);
   }
   setCurrentByClick(e);
   updateCellContentDisplay();
@@ -107,20 +72,20 @@ const handleEnterKey = (e) => {
   /* https://stackoverflow.com/a/61237402 */
   e.preventDefault();
   if (current.isFocused()) {
-    saveCurrentText();
+    saveCurrentInput(current);
   } else {
-    modifyExistingText();
+    modifyExistingInput(current);
   }
 };
 const handleArrowKey = (e) => {
   if (current.isEditingMode()) return;
   if (current.isFocused()) {
-    saveCurrentText();
+    saveCurrentInput(current);
   }
   navigate(e, current, setCurrentByKeys, Grid.cellsArray);
 };
 const handleCharacterKey = (e) => {
-  overwriteExistingText();
+  overwriteExistingInput(current);
 };
 
 const updateCellContentDisplay = () => {
@@ -132,16 +97,6 @@ const updateCellContentDisplay = () => {
     cellContentsDisplay.innerText = "";
   }
 };
-// following function is incomplete
-// function updateDependentCells() {
-//   if (current.getFormula()) {
-//     const cells = extractCells(current.getFormula());
-//     cells.forEach((cell) => {
-//       const [row, col] = Cell.extractRowAndColumn(cell);
-//       Grid.cellsArray[row][col].addDependentCell(current.getLocation());
-//     });
-//   }
-// }
 
 function setCurrentByClick(e) {
   current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
