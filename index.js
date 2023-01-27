@@ -20,7 +20,7 @@ Grid.createGrid(container, 200, 27);
 let current = Grid.cellsArray[1][1];
 let prev = null;
 highlightCoordinates();
-current.setBackgroundColor("red");
+current.getDomReference().classList.add("current-cell");
 
 /* since e.preventdefault() doesn't work with click , https://stackoverflow.com/a/16045050 */
 container.addEventListener("mousedown", handleMouseDownOnContainer);
@@ -99,16 +99,16 @@ const updateCellContentDisplay = () => {
 };
 
 function setCurrentByClick(e) {
-  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
+  current.getDomReference().classList.remove("current-cell");
   prev = current;
   const id = e.target.id;
   let [row, column] = Cell.extractRowAndColumn(id);
   current = Grid.cellsArray[row][column];
-  current.setBackgroundColor("red");
+  current.getDomReference().classList.add("current-cell");
   highlightCoordinates();
 }
 function setCurrentByKeys(e, nextCell) {
-  current.setBackgroundColor("rgba(255, 255, 255, 0.8)");
+  current.getDomReference().classList.remove("current-cell");
   prev = current;
   current = nextCell;
   current
@@ -126,19 +126,19 @@ function setCurrentByKeys(e, nextCell) {
       container.offsetLeft -
       container.clientWidth / 2;
   }
-  current.setBackgroundColor("red");
+  current.getDomReference().classList.add("current-cell");
   highlightCoordinates();
 }
 
 function highlightCoordinates() {
   if (prev) {
-    Grid.fixedRow[prev.getRow()].style.backgroundColor = "#bef3a4";
+    Grid.fixedRow[prev.getRow()].style.backgroundColor = "#f2f3f7";
     Grid.fixedCol[
       prev.getColumn().charCodeAt(0) - "A".charCodeAt(0) + 1
-    ].style.backgroundColor = "#bef3a4";
+    ].style.backgroundColor = "#f2f3f7";
   }
-  Grid.fixedRow[current.getRow()].style.backgroundColor = "#48de37";
+  Grid.fixedRow[current.getRow()].style.backgroundColor = "#dadce0";
   Grid.fixedCol[
     current.getColumn().charCodeAt(0) - "A".charCodeAt(0) + 1
-  ].style.backgroundColor = "#48de37";
+  ].style.backgroundColor = "#dadce0";
 }
