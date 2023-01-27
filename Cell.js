@@ -23,6 +23,9 @@ export class Cell {
   setWidth(width) {
     this.domReference.style.width = width;
   }
+  setHeight(height) {
+    this.domReference.style.height = height;
+  }
   getWidth() {
     return this.domReference.style.width;
   }
