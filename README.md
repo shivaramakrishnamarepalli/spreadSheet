@@ -31,10 +31,21 @@ the arrow keys will only work for the text inside the cell while it is in editin
 
 Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will look something like '23+56*9'
 
+
+
+
+
 current works : (shiva)
 
-fixed the first row and column to the grid-container
--neat finish(rough scroll after click)
+--resizing the column 
+
+--will like to work on displaying the formula bar better 
+--giving an area near the formula to enter and choose a grid by typing its id
+
+--neat finish(rough scroll after click)        
+                                            --- will always try to solve this not getting any solution currently
+
+
 
 mistakes to be rectified -
 
