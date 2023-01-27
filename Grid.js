@@ -1,5 +1,8 @@
 import { Cell } from "./Cell.js";
 import { columnNumberToLetter } from "./unicodeConversions.js";
+//import { createDiv } from "./Resize.js";
+//import { setListeners } from "./Resize.js";
+
 export const Grid = {
   cellsArray: null,
   fixedRow: null,
@@ -34,6 +37,12 @@ export const Grid = {
         grid.style.width = "90px";
         grid.classList.add("horizontal-index");
         this.fixedCol[columnNumber] = grid;
+
+        //var div = createDiv(numberOfRows*22);//just for trial calculate it correctly later
+        //grid.appendChild(div);
+        //grid.style.position = 'relative';
+        //setListeners(div);                    
+        
       } else {
         const columnNumber =
           Math.ceil(i % numberOfColumns) - 1 == -1
