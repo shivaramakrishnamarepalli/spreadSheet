@@ -32,9 +32,6 @@ the arrow keys will only work for the text inside the cell while it is in editin
 Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will look something like '23+56*9'
 
 
-
-
-
 current works : (shiva)
 
 --resizing the column 
@@ -44,7 +41,6 @@ current works : (shiva)
 
 --neat finish(rough scroll after click)        
                                             --- will always try to solve this not getting any solution currently
-
 
 
 mistakes to be rectified -
