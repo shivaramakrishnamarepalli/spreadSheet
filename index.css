@@ -7,6 +7,7 @@ body {
   width: 98vw;
   grid-template-columns: repeat(27, auto);
   outline: rgb(241 236 236 / 71%) solid 10px;
+  background-color: white;
 }
 
 .grid-item {
