@@ -6,22 +6,20 @@ body {
   height: 90vh;
   width: 98vw;
   grid-template-columns: repeat(27, auto);
-  grid-template-rows: repeat(25px);
-  outline: rgb(135 190 237) solid 10px;
+  outline: rgb(241 236 236 / 71%) solid 10px;
 }
 
 .grid-item {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: white;
+  height: 22px;
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 5px;
   font-size: 15px;
   text-align: center;
   margin: 0 auto;
 }
 
 .current-cell {
-  border: 2px solid rgba(255, 0, 0, 0.87);
-  outline: rgba(255, 0, 0, 0.87) solid 2px;
+  background-color: red;
 }
 
 #cell-contents-display {
@@ -39,13 +37,14 @@ body {
 }
 
 .vertical-index {
-  background-color: #bef3a4;
+  background-color: #f2f3f7;
   position: sticky;
-  top: 0;
+  left: 0;
 }
 
 .horizontal-index {
-  background-color: #bef3a4;
+  background-color: #f2f3f7;
+  height: 25px;
   position: sticky;
-  left: 0;
+  top: 0;
 }
