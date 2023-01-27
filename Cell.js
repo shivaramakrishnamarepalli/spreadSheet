@@ -11,7 +11,7 @@ export class Cell {
     this.domReference.classList.add("grid-item");
     parentContainer.appendChild(this.domReference);
     this.editingMode = false;
-    /* ..................Dependent Cells functionality is still work in progress ................*/
+    /* ..................Dependent Cells functionality is still work in progress  ................*/
     this.dependentCells = new Set();
   }
   getDomReference() {
