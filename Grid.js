@@ -14,7 +14,6 @@ export const Grid = {
     this.fixedCol = [];
     container.classList.add("grid-container");
     container.classList.add("grid-container-wrapper");
-    container.style.backgroundColor = "rgb(135, 190, 237)";
 
     for (let i = 1; i <= numberOfColumns * numberOfRows; i++) {
       let grid;
@@ -22,7 +21,7 @@ export const Grid = {
         grid = document.createElement("div");
         grid.style.width = "30px";
         grid.textContent = `${Math.ceil(i / numberOfColumns) - 1}`;
-        grid.classList.add("horizontal-index");
+        grid.classList.add("vertical-index");
         this.fixedRow[Math.ceil(i / numberOfColumns) - 1] = grid;
       } else if (i <= numberOfColumns) {
         grid = document.createElement("div");
@@ -32,8 +31,8 @@ export const Grid = {
             : Math.ceil(i % numberOfColumns) - 1;
         const columnLetter = columnNumberToLetter(columnNumber);
         grid.textContent = columnLetter;
-        grid.style.width = "150px";
-        grid.classList.add("vertical-index");
+        grid.style.width = "90px";
+        grid.classList.add("horizontal-index");
         this.fixedCol[columnNumber] = grid;
       } else {
         const columnNumber =
@@ -44,11 +43,13 @@ export const Grid = {
         const rowNumber = Math.ceil(i / numberOfColumns) - 1;
         const cell = new Cell(rowNumber, columnLetter, container);
         this.cellsArray[rowNumber][columnNumber] = cell;
-        cell.setWidth("150px");
+        cell.setWidth("90px");
+        cell.setHeight("22px");
       }
       if (i == 1) {
         grid.textContent = "";
         grid.classList.remove("vertical-index");
+        grid.style.height="25px";
       }
       if (i % numberOfColumns == 1 || i <= numberOfColumns) {
         grid.type = "text";
