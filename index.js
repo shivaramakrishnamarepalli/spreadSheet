@@ -8,7 +8,7 @@ import {
   saveCurrentInput,
 } from "./input.js";
 import { parseFormula, extractCells } from "./Formula.js";
-const expr = "E1+E2*A0+45/(67-123+16.99)*(SUM(E1:E2)/AVG(E1,E2,E3))";
+const expr = "E1+E23*A0+45/(67-123+16.99)*(SUM(E1:E2)/AVG(E1,E2,E3))";
 console.log("expr", expr);
 
 console.log("parsed expr:", parseFormula(expr));

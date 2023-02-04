@@ -3,7 +3,7 @@ import { Grid } from "./Grid.js";
 /*........................... this is incomplete code ....................*/
 export function parseFormula(formula) {
   const regex =
-    /(?<function>[A-Z]+\(.+?\))|(?<cell>[A-Z]\d)|(?<rest>[\d.()+*\/-]+)/g;
+    /(?<function>[A-Z]+\(.+?\))|(?<cell>[A-Z]\d+)|(?<rest>[\d.()+*\/-]+)/g;
   const components = formula.match(regex);
   console.log("components", components);
   if (components) {
@@ -37,5 +37,5 @@ function parseComponent(component) {
     console.log("function:", component);
     return "F";
   }
-  return "-";
+  return component;
 }
