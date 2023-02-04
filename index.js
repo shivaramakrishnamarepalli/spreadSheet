@@ -8,8 +8,10 @@ import {
   saveCurrentInput,
 } from "./input.js";
 import { parseFormula, extractCells } from "./Formula.js";
-// console.log("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)");
-// console.log(parseFormula("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)"));
+const expr = "E1+E2*A0+45/(67-123+16.99)*(SUM(E1:E2)/AVG(E1,E2,E3))";
+console.log("expr", expr);
+
+console.log("parsed expr:", parseFormula(expr));
 // console.log(
 //   extractDependentCells("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)")
 // );

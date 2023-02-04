@@ -2,16 +2,18 @@ import { Cell } from "./Cell.js";
 import { Grid } from "./Grid.js";
 /*........................... this is incomplete code ....................*/
 export function parseFormula(formula) {
-  const regex = /([\/*+-])/g; //matches only operators paranthesis keep the delimiters in the array after split()
-  const splittedArray = formula.split(regex);
-  return splittedArray
-    .map((item) => {
-      if (item.search(/[\/*+-]/) === -1) {
-        return parseComponent(item, cells);
-      }
-      return item;
-    })
-    .join("");
+  const regex =
+    /(?<function>[A-Z]+\(.+?\))|(?<cell>[A-Z]\d)|(?<rest>[\d.()+*\/-]+)/g;
+  const components = formula.match(regex);
+  console.log("components", components);
+  if (components) {
+    const parsedExpr = components
+      .map((component) => {
+        return parseComponent(component);
+      })
+      .join("");
+    return parsedExpr;
+  } else return null;
 }
 export function extractCells(formula) {
   const regex = /[:\(\)\/*+-]/g;
@@ -24,15 +26,16 @@ export function extractCells(formula) {
   });
 }
 function parseComponent(component) {
-  if (parseFloat(component)) {
-    return component;
-  } else if (component.search(/[\(\)]/) === -1) {
+  const cellRegexp = /^[A-Z]\d$/;
+  const functionRegexp = /^[A-Z]+\(.+?\)$/;
+  if (cellRegexp.test(component)) {
     //cell
-
-    return "L";
-  } else if (component.search(/[\(\)]/) !== -1) {
+    console.log("cell:", component);
+    return "C";
+  } else if (functionRegexp.test(component)) {
     //function
-    return "M";
+    console.log("function:", component);
+    return "F";
   }
-  return "----";
+  return "-";
 }
