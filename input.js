@@ -3,6 +3,8 @@ import {
   removeCurrentAsDependentCell,
   onValueUpdate,
 } from "./dependent.js";
+import { parseFormula } from "./Formula.js";
+import { compute } from "./Compute.js";
 //functions dealing with input
 
 export const modifyExistingInput = (current) => {
@@ -36,8 +38,12 @@ export const saveCurrentInput = (current) => {
   removeCurrentAsDependentCell(current);
   if (text.startsWith("=")) {
     current.setFormula(text.slice(1));
+    const formulaExpr = parseFormula(current.getFormula());
+    let val;
+    if (!formulaExpr) val = "#ERROR";
+    else val = compute(formulaExpr);
+    current.setValue(val);
     addCurrentAsDependentCell(current); // now current is dependent on those in the formula
-    current.setValue("yet to compute"); // parse formula and set value
   } else {
     current.setFormula(null);
     current.setValue(text);
