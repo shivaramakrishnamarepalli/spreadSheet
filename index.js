@@ -7,14 +7,8 @@ import {
   overwriteExistingInput,
   saveCurrentInput,
 } from "./input.js";
-import { parseFormula, extractCells } from "./Formula.js";
-const expr = "E1+E23*A0+45/(67-123+16.99)*(SUM(E1:E2)/AVG(E1,E2,E3))";
-console.log("expr", expr);
-
-console.log("parsed expr:", parseFormula(expr));
-// console.log(
-//   extractDependentCells("E1+E2*A0+45/67-123+16.99*SUM(E1:E2)/AVG(E1,E2,E3)")
-// );
+import { compute } from "./Compute.js";
+import { parseFormula } from "./Formula.js";
 
 const cellContentsDisplay = document.getElementById("cell-contents-display");
 const container = document.createElement("div");
@@ -144,3 +138,10 @@ function highlightCoordinates() {
     current.getColumn().charCodeAt(0) - "A".charCodeAt(0) + 1
   ].style.backgroundColor = "#dadce0";
 }
+/*.......................tests.........................*/
+// const expr = "E1+E23*A0+45/(67-123+16.99)*(SUM(E1,E2,45)/AVG(E1,E2,E3))";
+// const expr1 = "a1";
+// console.log("expr", expr1);
+// console.log("parsed expr:", parseFormula(expr1));
+// console.log("cmpute((-1)+(-2))", compute("(0-1)+(0-2)"));
+// console.log("cell array", Grid.cellsArray);
