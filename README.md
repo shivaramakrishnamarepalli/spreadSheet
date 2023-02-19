@@ -21,32 +21,32 @@ the arrow keys will only work for the text inside the cell while it is in editin
 
             user will type normal text and it will overwrite the previous value or formula
 
--Todo: (sameer)
+- formulas are supported now!
 
-- refactor and organise code that deals with input
+- negative numbers are also supported
 
-- add dependent cells code
+- functions implemented : sum
 
--Currently working on: (sameer)
-
-Parsing formula entered by user eg: '=E1+D2*C3' , the resulting expression will look something like '23+56*9'
-
+-Currently working on:
+Error handling for formula and more improvement
 
 current works : (shiva)
 
---resizing the column 
+--resizing the column
 
---will like to work on displaying the formula bar better 
+--will like to work on displaying the formula bar better
 --giving an area near the formula to enter and choose a grid by typing its id
 
---neat finish(rough scroll after click)        
-                                            --- will always try to solve this not getting any solution currently
-
+--neat finish(rough scroll after click)  
+ --- will always try to solve this not getting any solution currently
 
 mistakes to be rectified -
 
 postponed works -
-1)resizing the cell sizes with double click or like so
+
+1. resizing the cell sizes with double click or like so
+2. copying cell
+3. when cell's formula is copied it is either Absolute or relative (use of '$' sign )
 
 Specialities -
 1)can navigate throughout the sheet with arrow keys
